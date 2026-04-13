@@ -4,238 +4,870 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adjektive & Steigerung - VABO Deutsch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 40px rgba(15, 23, 42, 0.1);
+            --transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1e293b 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 20px;
         }
-        .game-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 90%;
+
+        .main-container {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        /* Header with Branding */
+        .header {
             text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
         }
-        h1 {
-            color: #2c3e50;
-            font-size: 24px;
+
+        .header h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
         }
-        .question-text {
-            font-size: 20px;
-            margin: 20px 0;
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 16px;
             font-weight: 500;
         }
-        .options-container {
+
+        /* Main Game Card */
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            animation: popIn 0.5s ease-out 0.1s both;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar-container {
+            background: var(--border);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 10px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .progress-info strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Score Display */
+        .score-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Question Section */
+        .question-section {
+            margin-bottom: 30px;
+        }
+
+        .difficulty-indicator {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .difficulty-easy {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .difficulty-medium {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .difficulty-hard {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .question-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .blank {
+            color: var(--primary);
+            font-weight: 700;
+            background: #dbeafe;
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+
+        /* Options Container */
+        .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
+
         .option-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 18px;
-            border-radius: 8px;
+            background: var(--border);
+            color: var(--text-primary);
+            border: 2px solid transparent;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
         }
-        .option-btn:hover {
-            background-color: #2980b9;
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.3s ease;
+            z-index: -1;
         }
+
+        .option-btn:not(:disabled):hover {
+            border-color: var(--primary);
+            background: #f0f9ff;
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+        }
+
         .option-btn:disabled {
             cursor: not-allowed;
-            opacity: 0.8;
         }
-        .correct {
-            background-color: #2ecc71 !important;
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: var(--success);
+            color: #166534;
+            animation: correctPulse 0.6s ease-out;
         }
-        .wrong {
-            background-color: #e74c3c !important;
+
+        .option-btn.wrong {
+            background: #fee2e2;
+            border-color: var(--danger);
+            color: #991b1b;
+            animation: shake 0.4s ease-out;
         }
-        .feedback {
-            font-size: 18px;
-            font-weight: bold;
-            min-height: 25px;
-            margin-bottom: 15px;
-        }
-        .next-btn {
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+
+        /* Feedback Section */
+        .feedback-section {
+            min-height: 50px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-weight: 600;
             font-size: 16px;
-            border-radius: 5px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .feedback-correct {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .feedback-wrong {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .feedback-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Streak Display */
+        .streak-display {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .streak-icon {
+            display: inline-block;
+            font-size: 20px;
+            animation: bounce 0.6s ease-out;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .next-btn {
             display: none;
         }
-        .next-btn:hover {
-            background-color: #1a252f;
+
+        .next-btn.show {
+            display: flex;
         }
-        .progress {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #7f8c8d;
+
+        /* Result Screen */
+        .result-container {
+            display: none;
+            animation: popIn 0.5s ease-out;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .result-emoji {
+            font-size: 60px;
+            margin-bottom: 16px;
+            display: block;
+            animation: bounce 0.6s ease-out;
+        }
+
+        .result-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .result-subtitle {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Performance Message */
+        .performance-message {
+            background: linear-gradient(135deg, #f0f9ff, #ecf0f1);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        /* Hidden State */
+        .hidden {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .game-card {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <h1>📝 Deutsch-Quiz: Adjektive</h1>
-    <div id="quiz-area">
-        <div class="question-text" id="question">Frage lädt...</div>
-        <div class="options-container" id="options">
-            </div>
-        <div class="feedback" id="feedback"></div>
-        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Nächste Frage</button>
-        <div class="progress" id="progress">Frage 1 / X</div>
+<div class="main-container">
+    <div class="header">
+        <h1>📚 Adjektive & Steigerung</h1>
+        <p>Deutsche Grammatik für VABO</p>
     </div>
-    
-    <div id="result-area" style="display: none;">
-        <h1>Super gemacht! 🎉</h1>
-        <p class="question-text">Du hast <span id="score">0</span> von <span id="total">0</span> Punkten erreicht.</p>
-        <button class="option-btn" onclick="restartGame()">Nochmal spielen</button>
+
+    <div class="game-card">
+        <!-- Quiz Area -->
+        <div id="quiz-area">
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-bar-fill"></div>
+                </div>
+                <div class="progress-info">
+                    <span>Frage <strong id="current-question">1</strong> von <strong id="total-questions">10</strong></span>
+                    <span class="score-badge">Richtig: <strong id="current-score">0</strong></span>
+                </div>
+            </div>
+
+            <!-- Streak Display -->
+            <div class="streak-display" id="streak-display"></div>
+
+            <!-- Question Section -->
+            <div class="question-section">
+                <div class="difficulty-indicator" id="difficulty-indicator"></div>
+                <div class="question-text" id="question">Frage lädt...</div>
+            </div>
+
+            <!-- Options -->
+            <div class="options-grid" id="options"></div>
+
+            <!-- Feedback -->
+            <div class="feedback-section" id="feedback-section" style="display: none;"></div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button class="btn btn-primary next-btn" id="next-btn" onclick="nextQuestion()">
+                    Nächste Frage
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Area -->
+        <div id="result-area" class="result-container">
+            <div class="result-header">
+                <span class="result-emoji" id="result-emoji">🎉</span>
+                <div class="result-title">Quiz abgeschlossen!</div>
+                <div class="result-subtitle">Großartig gemacht, du wirst immer besser!</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="final-score">0</div>
+                    <div class="stat-label">Richtige Antworten</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="accuracy-percentage">0%</div>
+                    <div class="stat-label">Genauigkeit</div>
+                </div>
+            </div>
+
+            <div class="performance-message" id="performance-message"></div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="restartGame()">🔄 Nochmal spielen</button>
+                <button class="btn btn-secondary" onclick="shuffleAndRestart()">🎲 Neue Reihenfolge</button>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Fragenpool angepasst an VABO (A1/A2 Niveau)
-    // Fokus auf Alltagsbegriffe und wichtige Ausnahmen (gut, viel, gern)
-    const questions = [
+    // Extended question bank with difficulty levels
+    const questionBank = [
+        // EASY - Basic comparatives
         {
             question: "Ein Elefant ist ___ als eine Maus.",
             options: ["groß", "größer", "am größten"],
-            answer: 1 // Index der richtigen Antwort (0-basiert)
+            answer: 1,
+            difficulty: "easy"
         },
         {
             question: "Ali ist genauso ___ wie sein Bruder.",
             options: ["alt", "älter", "am ältesten"],
-            answer: 0
-        },
-        {
-            question: "Ich trinke gern Wasser, aber Cola trinke ich ___.",
-            options: ["gern", "lieber", "am liebsten"],
-            answer: 1
-        },
-        {
-            question: "Dieser Berg ist der ___ in ganz Deutschland.",
-            options: ["hoch", "höher", "höchste"],
-            answer: 2
+            answer: 0,
+            difficulty: "easy"
         },
         {
             question: "Ein Auto fährt ___ als ein Fahrrad.",
             options: ["schnell", "schneller", "am schnellsten"],
-            answer: 1
+            answer: 1,
+            difficulty: "easy"
         },
         {
-            question: "Sara hat ___ Geld als Tom.",
-            options: ["viel", "mehr", "am meisten"],
-            answer: 1
+            question: "Diese Aufgabe ist so ___ wie jene Aufgabe.",
+            options: ["schwer", "schwerer", "am schwersten"],
+            answer: 0,
+            difficulty: "easy"
+        },
+        {
+            question: "Der Himmel ist heute ___.",
+            options: ["blau", "blauer", "am blauen"],
+            answer: 0,
+            difficulty: "easy"
+        },
+        // MEDIUM - Irregular adjectives
+        {
+            question: "Ich trinke gern Wasser, aber Cola trinke ich ___.",
+            options: ["gern", "lieber", "am liebsten"],
+            answer: 1,
+            difficulty: "medium"
         },
         {
             question: "Das Wetter heute ist ___ als gestern.",
             options: ["gut", "besser", "am besten"],
-            answer: 1
+            answer: 1,
+            difficulty: "medium"
         },
         {
-            question: "Meine Aufgabe ist so ___ wie deine Aufgabe.",
-            options: ["schwer", "schwerer", "am schwersten"],
-            answer: 0
+            question: "Diese Lösung ist ___ als meine Lösung.",
+            options: ["gut", "besser", "am besten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Das Essen schmeckt ___ als ich dachte.",
+            options: ["gut", "besser", "am besten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Mein Freund ist ___ als sein Vater.",
+            options: ["jung", "jünger", "am jüngsten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        // MEDIUM - More/viel
+        {
+            question: "Sara hat ___ Geld als Tom.",
+            options: ["viel", "mehr", "am meisten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "In der Sommerpause habe ich ___ Zeit zum Lernen.",
+            options: ["viel", "mehr", "am meisten"],
+            answer: 0,
+            difficulty: "medium"
+        },
+        {
+            question: "In diesem Geschäft gibt es ___ Produkte als in jenem.",
+            options: ["viel", "mehr", "am meisten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        // HARD - Superlatives
+        {
+            question: "Dieser Berg ist der ___ in ganz Deutschland.",
+            options: ["hoch", "höher", "höchste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist das ___ Buch, das ich je gelesen habe.",
+            options: ["interessant", "interessanter", "interessanteste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Sie arbeitet am ___ in unserer Gruppe.",
+            options: ["fleißig", "fleißiger", "fleißigsten"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ___ Zimmer im Haus ist das Wohnzimmer.",
+            options: ["groß", "größer", "größte"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Wer ist der ___ Student in der Klasse?",
+            options: ["alt", "älter", "älteste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        // HARD - Mixed forms
+        {
+            question: "Die ___ Pizza schmeckt immer noch gut.",
+            options: ["kalt", "kälter", "kälteste"],
+            answer: 0,
+            difficulty: "hard"
+        },
+        {
+            question: "Diese Farbe ist ___ als die andere.",
+            options: ["hell", "heller", "am hellsten"],
+            answer: 1,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist die ___ Lösung für das Problem.",
+            options: ["praktisch", "praktischer", "praktischste"],
+            answer: 2,
+            difficulty: "hard"
         }
     ];
 
-    let currentQuestionIndex = 0;
-    let score = 0;
+    // Game state
+    let gameState = {
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        streak: 0,
+        answered: false,
+        selectedButton: null
+    };
 
-    const questionEl = document.getElementById('question');
-    const optionsEl = document.getElementById('options');
-    const feedbackEl = document.getElementById('feedback');
-    const nextBtn = document.getElementById('next-btn');
-    const progressEl = document.getElementById('progress');
     const quizArea = document.getElementById('quiz-area');
     const resultArea = document.getElementById('result-area');
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const feedbackSection = document.getElementById('feedback-section');
+    const nextBtn = document.getElementById('next-btn');
+    const progressBar = document.getElementById('progress-bar-fill');
+    const currentQuestionEl = document.getElementById('current-question');
+    const totalQuestionsEl = document.getElementById('total-questions');
+    const currentScoreEl = document.getElementById('current-score');
+    const streakDisplay = document.getElementById('streak-display');
+    const difficultyIndicator = document.getElementById('difficulty-indicator');
+
+    function initializeGame() {
+        // Shuffle questions and pick 10
+        gameState.questions = shuffleArray([...questionBank]).slice(0, 10);
+        gameState.currentIndex = 0;
+        gameState.score = 0;
+        gameState.streak = 0;
+        gameState.answered = false;
+        
+        totalQuestionsEl.textContent = gameState.questions.length;
+        quizArea.style.display = 'block';
+        resultArea.style.display = 'none';
+        
+        loadQuestion();
+    }
 
     function loadQuestion() {
-        // Reset Zustand
-        feedbackEl.textContent = "";
-        nextBtn.style.display = "none";
-        optionsEl.innerHTML = "";
+        feedbackSection.style.display = 'none';
+        nextBtn.classList.remove('show');
+        optionsEl.innerHTML = '';
+        gameState.answered = false;
+        gameState.selectedButton = null;
         
-        const currentQuestion = questions[currentQuestionIndex];
-        questionEl.textContent = currentQuestion.question;
-        progressEl.textContent = `Frage ${currentQuestionIndex + 1} / ${questions.length}`;
-
-        // Buttons generieren
+        const currentQuestion = gameState.questions[gameState.currentIndex];
+        
+        // Update progress
+        currentQuestionEl.textContent = gameState.currentIndex + 1;
+        currentScoreEl.textContent = gameState.score;
+        const progress = ((gameState.currentIndex) / gameState.questions.length) * 100;
+        progressBar.style.width = progress + '%';
+        
+        // Update difficulty indicator
+        const difficultyMap = {
+            'easy': 'Leicht 🟢',
+            'medium': 'Mittel 🟡',
+            'hard': 'Schwer 🔴'
+        };
+        difficultyIndicator.textContent = difficultyMap[currentQuestion.difficulty];
+        difficultyIndicator.className = `difficulty-indicator difficulty-${currentQuestion.difficulty}`;
+        
+        // Update streak display
+        if (gameState.streak > 0) {
+            streakDisplay.innerHTML = `<span class="streak-icon">🔥</span> ${gameState.streak} in Folge!`;
+        } else {
+            streakDisplay.textContent = '';
+        }
+        
+        // Set question with highlighted blank
+        const questionText = currentQuestion.question.replace('___', `<span class="blank">___</span>`);
+        questionEl.innerHTML = questionText;
+        
+        // Create option buttons
         currentQuestion.options.forEach((option, index) => {
             const button = document.createElement('button');
-            button.textContent = option;
             button.classList.add('option-btn');
+            button.textContent = option;
             button.onclick = () => checkAnswer(index, button);
             optionsEl.appendChild(button);
         });
     }
 
     function checkAnswer(selectedIndex, buttonElement) {
-        const currentQuestion = questions[currentQuestionIndex];
-        const buttons = optionsEl.children;
-
-        // Alle Buttons deaktivieren
-        for (let i = 0; i < buttons.length; i++) {
-            buttons[i].disabled = true;
-        }
-
-        // Überprüfen
-        if (selectedIndex === currentQuestion.answer) {
+        if (gameState.answered) return;
+        
+        gameState.answered = true;
+        gameState.selectedButton = buttonElement;
+        const currentQuestion = gameState.questions[gameState.currentIndex];
+        const allButtons = optionsEl.querySelectorAll('.option-btn');
+        
+        // Disable all buttons
+        allButtons.forEach(btn => btn.disabled = true);
+        
+        // Check answer
+        const isCorrect = selectedIndex === currentQuestion.answer;
+        
+        if (isCorrect) {
             buttonElement.classList.add('correct');
-            feedbackEl.textContent = "✅ Richtig!";
-            feedbackEl.style.color = "#2ecc71";
-            score++;
+            gameState.score++;
+            gameState.streak++;
+            
+            feedbackSection.innerHTML = '<div class="feedback-message">✅ Richtig!</div>';
+            feedbackSection.className = 'feedback-section feedback-correct';
         } else {
             buttonElement.classList.add('wrong');
-            buttons[currentQuestion.answer].classList.add('correct'); // Zeigt die richtige Antwort
-            feedbackEl.textContent = "❌ Leider falsch.";
-            feedbackEl.style.color = "#e74c3c";
+            allButtons[currentQuestion.answer].classList.add('correct');
+            gameState.streak = 0;
+            
+            feedbackSection.innerHTML = '<div class="feedback-message">❌ Leider falsch</div>';
+            feedbackSection.className = 'feedback-section feedback-wrong';
         }
-
-        nextBtn.style.display = "inline-block";
+        
+        feedbackSection.style.display = 'flex';
+        nextBtn.classList.add('show');
     }
 
     function nextQuestion() {
-        currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
+        gameState.currentIndex++;
+        if (gameState.currentIndex < gameState.questions.length) {
             loadQuestion();
         } else {
-            showResult();
+            showResults();
         }
     }
 
-    function showResult() {
-        quizArea.style.display = "none";
-        resultArea.style.display = "block";
-        document.getElementById('score').textContent = score;
-        document.getElementById('total').textContent = questions.length;
+    function showResults() {
+        quizArea.style.display = 'none';
+        resultArea.style.display = 'block';
+        
+        const totalQuestions = gameState.questions.length;
+        const percentage = Math.round((gameState.score / totalQuestions) * 100);
+        
+        document.getElementById('final-score').textContent = gameState.score;
+        document.getElementById('accuracy-percentage').textContent = percentage + '%';
+        
+        // Performance message based on score
+        let message = '';
+        let emoji = '';
+        
+        if (percentage === 100) {
+            emoji = '🥇';
+            message = 'Perfekt! Du beherrschst Adjektivsteigerung wie ein Profi. Unglaublich!';
+        } else if (percentage >= 80) {
+            emoji = '🥈';
+            message = 'Sehr gut! Du hast die meisten Fragen richtig beantwortet. Noch ein bisschen üben!';
+        } else if (percentage >= 60) {
+            emoji = '🥉';
+            message = 'Gut! Du machst Fortschritte. Wiederhole die schwierigeren Formen.';
+        } else if (percentage >= 40) {
+            emoji = '💪';
+            message = 'Guter Anfang! Mit mehr Übung wirst du schnell besser. Nicht aufgeben!';
+        } else {
+            emoji = '📚';
+            message = 'Weitermachen! Jede Übung hilft. Versuche es nochmal!';
+        }
+        
+        document.getElementById('result-emoji').textContent = emoji;
+        document.getElementById('performance-message').textContent = message;
     }
 
     function restartGame() {
-        currentQuestionIndex = 0;
-        score = 0;
-        quizArea.style.display = "block";
-        resultArea.style.display = "none";
-        loadQuestion();
+        initializeGame();
     }
 
-    // Spiel starten
-    loadQuestion();
+    function shuffleAndRestart() {
+        initializeGame();
+    }
+
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Start the game
+    initializeGame();
 </script>
 
 </body>
