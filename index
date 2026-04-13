@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjektive & Steigerung - VABO Deutsch</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        .question-text {
+            font-size: 20px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .option-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option-btn:hover {
+            background-color: #2980b9;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .correct {
+            background-color: #2ecc71 !important;
+        }
+        .wrong {
+            background-color: #e74c3c !important;
+        }
+        .feedback {
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 25px;
+            margin-bottom: 15px;
+        }
+        .next-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+        .next-btn:hover {
+            background-color: #1a252f;
+        }
+        .progress {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>📝 Deutsch-Quiz: Adjektive</h1>
+    <div id="quiz-area">
+        <div class="question-text" id="question">Frage lädt...</div>
+        <div class="options-container" id="options">
+            </div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Nächste Frage</button>
+        <div class="progress" id="progress">Frage 1 / X</div>
+    </div>
+    
+    <div id="result-area" style="display: none;">
+        <h1>Super gemacht! 🎉</h1>
+        <p class="question-text">Du hast <span id="score">0</span> von <span id="total">0</span> Punkten erreicht.</p>
+        <button class="option-btn" onclick="restartGame()">Nochmal spielen</button>
+    </div>
+</div>
+
+<script>
+    // Fragenpool angepasst an VABO (A1/A2 Niveau)
+    // Fokus auf Alltagsbegriffe und wichtige Ausnahmen (gut, viel, gern)
+    const questions = [
+        {
+            question: "Ein Elefant ist ___ als eine Maus.",
+            options: ["groß", "größer", "am größten"],
+            answer: 1 // Index der richtigen Antwort (0-basiert)
+        },
+        {
+            question: "Ali ist genauso ___ wie sein Bruder.",
+            options: ["alt", "älter", "am ältesten"],
+            answer: 0
+        },
+        {
+            question: "Ich trinke gern Wasser, aber Cola trinke ich ___.",
+            options: ["gern", "lieber", "am liebsten"],
+            answer: 1
+        },
+        {
+            question: "Dieser Berg ist der ___ in ganz Deutschland.",
+            options: ["hoch", "höher", "höchste"],
+            answer: 2
+        },
+        {
+            question: "Ein Auto fährt ___ als ein Fahrrad.",
+            options: ["schnell", "schneller", "am schnellsten"],
+            answer: 1
+        },
+        {
+            question: "Sara hat ___ Geld als Tom.",
+            options: ["viel", "mehr", "am meisten"],
+            answer: 1
+        },
+        {
+            question: "Das Wetter heute ist ___ als gestern.",
+            options: ["gut", "besser", "am besten"],
+            answer: 1
+        },
+        {
+            question: "Meine Aufgabe ist so ___ wie deine Aufgabe.",
+            options: ["schwer", "schwerer", "am schwersten"],
+            answer: 0
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const progressEl = document.getElementById('progress');
+    const quizArea = document.getElementById('quiz-area');
+    const resultArea = document.getElementById('result-area');
+
+    function loadQuestion() {
+        // Reset Zustand
+        feedbackEl.textContent = "";
+        nextBtn.style.display = "none";
+        optionsEl.innerHTML = "";
+        
+        const currentQuestion = questions[currentQuestionIndex];
+        questionEl.textContent = currentQuestion.question;
+        progressEl.textContent = `Frage ${currentQuestionIndex + 1} / ${questions.length}`;
+
+        // Buttons generieren
+        currentQuestion.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.classList.add('option-btn');
+            button.onclick = () => checkAnswer(index, button);
+            optionsEl.appendChild(button);
+        });
+    }
+
+    function checkAnswer(selectedIndex, buttonElement) {
+        const currentQuestion = questions[currentQuestionIndex];
+        const buttons = optionsEl.children;
+
+        // Alle Buttons deaktivieren
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+        }
+
+        // Überprüfen
+        if (selectedIndex === currentQuestion.answer) {
+            buttonElement.classList.add('correct');
+            feedbackEl.textContent = "✅ Richtig!";
+            feedbackEl.style.color = "#2ecc71";
+            score++;
+        } else {
+            buttonElement.classList.add('wrong');
+            buttons[currentQuestion.answer].classList.add('correct'); // Zeigt die richtige Antwort
+            feedbackEl.textContent = "❌ Leider falsch.";
+            feedbackEl.style.color = "#e74c3c";
+        }
+
+        nextBtn.style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        quizArea.style.display = "none";
+        resultArea.style.display = "block";
+        document.getElementById('score').textContent = score;
+        document.getElementById('total').textContent = questions.length;
+    }
+
+    function restartGame() {
+        currentQuestionIndex = 0;
+        score = 0;
+        quizArea.style.display = "block";
+        resultArea.style.display = "none";
+        loadQuestion();
+    }
+
+    // Spiel starten
+    loadQuestion();
+</script>
+
+</body>
+</html>
