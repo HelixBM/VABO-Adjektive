@@ -79,6 +79,112 @@
             animation: popIn 0.5s ease-out 0.1s both;
         }
 
+        /* Difficulty Selection Screen */
+        .difficulty-screen {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .difficulty-intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .difficulty-intro h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .difficulty-intro p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .difficulty-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .difficulty-card {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .difficulty-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2);
+        }
+
+        .difficulty-card.easy {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4, #dbeafe);
+        }
+
+        .difficulty-card.easy:hover {
+            background: linear-gradient(135deg, #e0f9f4, #cef5ff);
+        }
+
+        .difficulty-card.medium {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        }
+
+        .difficulty-card.medium:hover {
+            background: linear-gradient(135deg, #fff8e1, #ffeaa7);
+        }
+
+        .difficulty-card.hard {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+        }
+
+        .difficulty-card.hard:hover {
+            background: linear-gradient(135deg, #fde8e8, #fdd3d3);
+        }
+
+        .difficulty-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .difficulty-icon {
+            font-size: 32px;
+        }
+
+        .difficulty-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .difficulty-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .difficulty-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
         /* Progress Bar */
         .progress-section {
             margin-bottom: 30px;
@@ -322,6 +428,15 @@
             transform: translateY(-2px);
         }
 
+        .btn-back {
+            background: var(--border);
+            color: var(--text-primary);
+        }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+        }
+
         .next-btn {
             display: none;
         }
@@ -458,6 +573,15 @@
             50% { transform: translateY(-8px); }
         }
 
+        /* Quiz area */
+        #quiz-area {
+            display: none;
+        }
+
+        #quiz-area.show {
+            display: block;
+        }
+
         /* Responsive */
         @media (max-width: 640px) {
             .game-card {
@@ -475,6 +599,10 @@
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
+            .difficulty-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -487,8 +615,58 @@
     </div>
 
     <div class="game-card">
+        <!-- Difficulty Selection Screen -->
+        <div id="difficulty-screen" class="difficulty-screen">
+            <div class="difficulty-intro">
+                <h2>Wähle dein Niveau</h2>
+                <p>Beginne mit einem passenden Schwierigkeitsgrad und arbeite dich hoch!</p>
+            </div>
+
+            <div class="difficulty-grid">
+                <div class="difficulty-card easy" onclick="selectDifficulty('easy')">
+                    <div class="difficulty-header">
+                        <div class="difficulty-icon">🟢</div>
+                        <div class="difficulty-title">Leicht</div>
+                    </div>
+                    <div class="difficulty-description">Grundlagen lernen: Positive Formen und einfache Komparative</div>
+                    <div class="difficulty-meta">
+                        <span>15 Fragen</span>
+                        <span>Für Anfänger</span>
+                    </div>
+                </div>
+
+                <div class="difficulty-card medium" onclick="selectDifficulty('medium')">
+                    <div class="difficulty-header">
+                        <div class="difficulty-icon">🟡</div>
+                        <div class="difficulty-title">Mittel</div>
+                    </div>
+                    <div class="difficulty-description">Komparative und Superlative üben; Unregelmäßige Formen</div>
+                    <div class="difficulty-meta">
+                        <span>20 Fragen</span>
+                        <span>Für Mittelstufe</span>
+                    </div>
+                </div>
+
+                <div class="difficulty-card hard" onclick="selectDifficulty('hard')">
+                    <div class="difficulty-header">
+                        <div class="difficulty-icon">🔴</div>
+                        <div class="difficulty-title">Schwer</div>
+                    </div>
+                    <div class="difficulty-description">Alle Formen durcheinander: Meistern Sie die Adjektivsteigerung!</div>
+                    <div class="difficulty-meta">
+                        <span>25 Fragen</span>
+                        <span>Für Fortgeschrittene</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Quiz Area -->
         <div id="quiz-area">
+            <div style="margin-bottom: 20px;">
+                <button class="btn btn-back" onclick="backToDifficulty()" style="width: 100px;">← Zurück</button>
+            </div>
+
             <!-- Progress Section -->
             <div class="progress-section">
                 <div class="progress-bar-container">
@@ -546,16 +724,21 @@
 
             <div class="button-group">
                 <button class="btn btn-primary" onclick="restartGame()">🔄 Nochmal spielen</button>
-                <button class="btn btn-secondary" onclick="shuffleAndRestart()">🎲 Neue Reihenfolge</button>
+                <button class="btn btn-secondary" onclick="backToDifficulty()">📊 Level wechseln</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Extended question bank with difficulty levels
-    const questionBank = [
-        // EASY - Basic comparatives
+    // EASY - Basic positive forms and simple comparatives
+    const easyQuestions = [
+        {
+            question: "Das Wetter ist heute ___.",
+            options: ["schön", "schöner", "am schönsten"],
+            answer: 0,
+            difficulty: "easy"
+        },
         {
             question: "Ein Elefant ist ___ als eine Maus.",
             options: ["groß", "größer", "am größten"],
@@ -586,7 +769,64 @@
             answer: 0,
             difficulty: "easy"
         },
-        // MEDIUM - Irregular adjectives
+        {
+            question: "Das Eis ist ___ an diesem heißen Tag.",
+            options: ["kalt", "kälter", "am kältesten"],
+            answer: 0,
+            difficulty: "easy"
+        },
+        {
+            question: "Ein Zug fährt ___ als ein Auto.",
+            options: ["langsam", "langsamer", "am langsamsten"],
+            answer: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "Das Hotel ist sehr ___.",
+            options: ["modern", "moderner", "am modernsten"],
+            answer: 0,
+            difficulty: "easy"
+        },
+        {
+            question: "Ein Bleistift ist ___ als ein Buch.",
+            options: ["klein", "kleiner", "am kleinsten"],
+            answer: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "Die Sonne ist ___ in der Wüste.",
+            options: ["heiß", "heißer", "am heißesten"],
+            answer: 0,
+            difficulty: "easy"
+        },
+        {
+            question: "Ein Vogel ist ___ als ein Elephant.",
+            options: ["leicht", "leichter", "am leichtesten"],
+            answer: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "Das Wort ist sehr ___.",
+            options: ["lang", "länger", "am längsten"],
+            answer: 0,
+            difficulty: "easy"
+        },
+        {
+            question: "Ein Apfel ist ___ als eine Wassermelone.",
+            options: ["süß", "süßer", "am süßesten"],
+            answer: 1,
+            difficulty: "easy"
+        },
+        {
+            question: "Das Klassenzimmer ist ___.",
+            options: ["hell", "heller", "am hellsten"],
+            answer: 0,
+            difficulty: "easy"
+        }
+    ];
+
+    // MEDIUM - Irregular forms and more complex comparatives
+    const mediumQuestions = [
         {
             question: "Ich trinke gern Wasser, aber Cola trinke ich ___.",
             options: ["gern", "lieber", "am liebsten"],
@@ -617,7 +857,6 @@
             answer: 1,
             difficulty: "medium"
         },
-        // MEDIUM - More/viel
         {
             question: "Sara hat ___ Geld als Tom.",
             options: ["viel", "mehr", "am meisten"],
@@ -636,7 +875,82 @@
             answer: 1,
             difficulty: "medium"
         },
-        // HARD - Superlatives
+        {
+            question: "Das ist ein ___ Fehler als der letzte.",
+            options: ["groß", "größer", "am größten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Meine Schwester ist ___ ich.",
+            options: ["alt", "älter als", "am ältesten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Die Nacht ist ___ als der Tag in Winter.",
+            options: ["lang", "länger", "am längsten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Diese Aufgabe ist ___ als die erste.",
+            options: ["schwierig", "schwieriger", "am schwierigsten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Das Zimmer ist ___ wenn das Fenster offen ist.",
+            options: ["kühl", "kühler", "am kühlsten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Ein Schmetterling fliegt ___ als ein Flugzeug.",
+            options: ["langsam", "langsamer", "am langsamsten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Der Roman ist ___ als die Kurzgeschichte.",
+            options: ["interessant", "interessanter", "am interessantesten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Im Sommer ist das Wetter ___ als im Winter.",
+            options: ["warm", "wärmer", "am wärmsten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Das Problem ist ___ als ich dachte.",
+            options: ["kompliziert", "komplizierter", "am kompliziertesten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Die Kartoffeln sind ___ aber ich mag sie.",
+            options: ["billig", "billiger", "am billigsten"],
+            answer: 0,
+            difficulty: "medium"
+        },
+        {
+            question: "Ein Kino ist ___ als ein Privathaus.",
+            options: ["groß", "größer", "am größten"],
+            answer: 1,
+            difficulty: "medium"
+        },
+        {
+            question: "Die Musik ist ___ wenn die Lautsprecher größer sind.",
+            options: ["laut", "lauter", "am lautesten"],
+            answer: 1,
+            difficulty: "medium"
+        }
+    ];
+
+    // HARD - All forms mixed together, superlatives, complex sentences
+    const hardQuestions = [
         {
             question: "Dieser Berg ist der ___ in ganz Deutschland.",
             options: ["hoch", "höher", "höchste"],
@@ -667,7 +981,6 @@
             answer: 2,
             difficulty: "hard"
         },
-        // HARD - Mixed forms
         {
             question: "Die ___ Pizza schmeckt immer noch gut.",
             options: ["kalt", "kälter", "kälteste"],
@@ -685,6 +998,108 @@
             options: ["praktisch", "praktischer", "praktischste"],
             answer: 2,
             difficulty: "hard"
+        },
+        {
+            question: "Der ___Film in unserem Kino ist dieser Action-Film.",
+            options: ["neu", "neuer", "neueste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist das ___ Material für diesen Zweck.",
+            options: ["hart", "härter", "härteste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Berlin ist ___ als mein Heimatdorf.",
+            options: ["groß", "größer", "am größten"],
+            answer: 1,
+            difficulty: "hard"
+        },
+        {
+            question: "Die ___ Temperatur im Winter ist unter 0 Grad.",
+            options: ["kalt", "kälter", "kälteste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Dieses Restaurant hat die ___ Kundenbewertungen.",
+            options: ["hoch", "höher", "höchsten"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Der ___ Spieler des Teams ist der Torwart.",
+            options: ["wichtig", "wichtiger", "wichtigste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist das ____ Gemälde in der Ausstellung.",
+            options: ["wertvoll", "wertvoller", "wertvollste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Ein Diamant ist ___ als Glas.",
+            options: ["hart", "härter", "am härtesten"],
+            answer: 1,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist das ___ Café in der Stadt.",
+            options: ["gemütlich", "gemütlicher", "gemütlichste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Die ___ Aufgabe war für alle leicht.",
+            options: ["erste", "früher", "früheste"],
+            answer: 0,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist die ___ Straße in unserer Stadt.",
+            options: ["lang", "länger", "längste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Der ___ Mensch im Stadion war sicher 2 Meter groß.",
+            options: ["groß", "größer", "größte"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist das ___ Wort in diesem Text.",
+            options: ["schwierig", "schwieriger", "schwierigste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Die ___ Trainerin im Fitnessstudio ist Frau Schmidt.",
+            options: ["erfahren", "erfahrener", "erfahrenste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Ein Flugzeug ist ___ als ein Auto.",
+            options: ["schnell", "schneller", "am schnellsten"],
+            answer: 1,
+            difficulty: "hard"
+        },
+        {
+            question: "Das ist der ___ Tag des Jahres.",
+            options: ["heiß", "heißer", "heißeste"],
+            answer: 2,
+            difficulty: "hard"
+        },
+        {
+            question: "Die ____ Jahreszeit ist der Winter.",
+            options: ["kalt", "kälter", "kälteste"],
+            answer: 2,
+            difficulty: "hard"
         }
     ];
 
@@ -695,9 +1110,11 @@
         score: 0,
         streak: 0,
         answered: false,
-        selectedButton: null
+        selectedButton: null,
+        difficulty: null
     };
 
+    const difficultyScreen = document.getElementById('difficulty-screen');
     const quizArea = document.getElementById('quiz-area');
     const resultArea = document.getElementById('result-area');
     const questionEl = document.getElementById('question');
@@ -711,16 +1128,25 @@
     const streakDisplay = document.getElementById('streak-display');
     const difficultyIndicator = document.getElementById('difficulty-indicator');
 
-    function initializeGame() {
-        // Shuffle questions and pick 10
-        gameState.questions = shuffleArray([...questionBank]).slice(0, 10);
+    function selectDifficulty(difficulty) {
+        gameState.difficulty = difficulty;
+        
+        if (difficulty === 'easy') {
+            gameState.questions = shuffleArray([...easyQuestions]);
+        } else if (difficulty === 'medium') {
+            gameState.questions = shuffleArray([...mediumQuestions]);
+        } else if (difficulty === 'hard') {
+            gameState.questions = shuffleArray([...hardQuestions]);
+        }
+        
         gameState.currentIndex = 0;
         gameState.score = 0;
         gameState.streak = 0;
         gameState.answered = false;
         
         totalQuestionsEl.textContent = gameState.questions.length;
-        quizArea.style.display = 'block';
+        difficultyScreen.style.display = 'none';
+        quizArea.classList.add('show');
         resultArea.style.display = 'none';
         
         loadQuestion();
@@ -815,7 +1241,7 @@
     }
 
     function showResults() {
-        quizArea.style.display = 'none';
+        quizArea.classList.remove('show');
         resultArea.style.display = 'block';
         
         const totalQuestions = gameState.questions.length;
@@ -850,11 +1276,14 @@
     }
 
     function restartGame() {
-        initializeGame();
+        selectDifficulty(gameState.difficulty);
     }
 
-    function shuffleAndRestart() {
-        initializeGame();
+    function backToDifficulty() {
+        difficultyScreen.style.display = 'block';
+        quizArea.classList.remove('show');
+        resultArea.style.display = 'none';
+        gameState.difficulty = null;
     }
 
     function shuffleArray(array) {
@@ -866,8 +1295,8 @@
         return arr;
     }
 
-    // Start the game
-    initializeGame();
+    // Start the game on difficulty screen
+    difficultyScreen.style.display = 'block';
 </script>
 
 </body>
